@@ -8,7 +8,21 @@ It's specially useful to developers and system administrators, because it stores
 
 ## Grails Version
 
-2.0 >
+2.* >
+
+## Install
+
+Maven Repository:
+
+```java
+"http://dl.bintray.com/erickmorales3/maven"
+```
+
+Dependency:
+
+```java
+compile ":action-logging:1.0.0"
+```
 
 ## How to use
 
