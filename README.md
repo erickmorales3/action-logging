@@ -4,7 +4,7 @@ A simple Grails Plugin to store log of controller actions in database including 
 
 ## Descripción
 
-It's specially useful to developers and system administrators, because it stores personalized messages, exceptions occurred during runtime including StackTrace messages and execution total time. This allows to know application weaknesses and do  corrections before user report. In addition offers a tool to assist in aplication security because it allows store the user id resposible of action execution.
+It's specially useful to developers and system administrators, because it stores custom messages, exceptions occurred during runtime including StackTrace messages and execution total time. This allows to know application weaknesses and do  corrections before user report. In addition offers a tool to assist in aplication security because it allows store the user id resposible of action execution.
 
 ## Grails Version
 
@@ -174,13 +174,12 @@ class SampleController {
 }
 ```
 
-### Thanks
-
-I hope it helps you
-
 
 License
 ----
 
  MIT License
 
+### Thanks
+
+I hope it helps you
