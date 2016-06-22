@@ -101,7 +101,7 @@ class SampleController {
 
 #### Setting custom action name
 
-- ##### Using @CustomActionName annotation
+- Using @CustomActionName annotation
 
 ```java
 @ActionLogging
@@ -113,7 +113,7 @@ class SampleController {
 }
 ```
 
-- ##### Using actionLoggingService service
+- Using actionLoggingService service
 
 ```java
 @ActionLogging
@@ -128,7 +128,7 @@ class SampleController {
 
 #### Setting action type to specific action to identification
 
-- ##### Using @ActionType annotation
+- Using @ActionType annotation
 
 ```java
 @ActionLogging
@@ -140,7 +140,7 @@ class SampleController {
 }
 ```
 
-- ##### Using actionLoggingService service
+- Using actionLoggingService service
 
 ```java
 @ActionLogging
