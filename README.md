@@ -29,7 +29,7 @@ class SampleController {
 
 This way, will store a log of all existing actions in controller and the result can be seen nivigating to actionLoggingEvent controller.
 
-![alt tag](https://github.com/erickmorales3/action-logging/tree/master/actionLoggingEventList.png)
+![alt tag](https://github.com/erickmorales3/action-logging/blob/master/actionLoggingEventList.png)
 
 ## Some examples
 
