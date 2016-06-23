@@ -12,10 +12,10 @@ It's specially useful to developers and system administrators, because saves cus
 
 ## Install
 
-Maven Repository:
+Repository:
 
 ```java
-"http://dl.bintray.com/erickmorales3/maven"
+mavenRepo "http://dl.bintray.com/erickmorales3/maven"
 ```
 
 Dependency:
