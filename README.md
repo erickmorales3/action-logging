@@ -2,7 +2,7 @@
 
 A simple Grails Plugin to save a controller actions log in database, including controller name, action name, start-end time, total time (seconds), exceptions, custom messages and more.
 
-## Descripción
+## Description
 
 It's specially useful to developers and system administrators, because saves custom messages, exceptions and execution time. This allows to know application weaknesses to correct it before user report. In addition, it allows to identify the current user to create  a user action history.
 
