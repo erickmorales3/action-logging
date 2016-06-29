@@ -6,6 +6,8 @@ A simple Grails Plugin to save a controller actions log in database, including c
 
 It's specially useful to developers and system administrators, because saves custom messages, exceptions and execution time. This allows to know application weaknesses to correct it before user report. In addition, it allows to identify the current user to create  a user action history.
 
+For further information see [https://erickmorales3.github.io/action-logging/](https://erickmorales3.github.io/action-logging/)
+
 ## Grails Version
 
 2.* >
