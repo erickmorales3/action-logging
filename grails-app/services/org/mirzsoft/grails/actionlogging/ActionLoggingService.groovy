@@ -38,13 +38,13 @@ class ActionLoggingService {
         
         if (actionLoggingEvent) {
             if(printCustomLogEnabled){
-                println message
+                log.info message
             }
         
             actionLoggingEvent.customLog += "${message}\n"
             session.actionLoggingEvent = actionLoggingEvent    
         } else {
-            println "ActionLoggingEvent object not found."
+            log.info "ActionLoggingEvent object not found."
         }
     }
     
@@ -56,7 +56,7 @@ class ActionLoggingService {
             actionLoggingEvent.customActionName = customActionName
             session.actionLoggingEvent = actionLoggingEvent    
         } else {
-            println "ActionLoggingEvent object not found."
+            log.info "ActionLoggingEvent object not found."
         }
     }
     
@@ -68,7 +68,7 @@ class ActionLoggingService {
             actionLoggingEvent.actionType = actionType
             session.actionLoggingEvent = actionLoggingEvent    
         } else {
-            println "ActionLoggingEvent object not found."
+            log.info "ActionLoggingEvent object not found."
         }
     }
     
@@ -80,7 +80,7 @@ class ActionLoggingService {
             actionLoggingEvent.userId = userId
             session.actionLoggingEvent = actionLoggingEvent    
         } else {
-            println "ActionLoggingEvent object not found."
+            log.info "ActionLoggingEvent object not found."
         }
     }
     
@@ -101,9 +101,9 @@ class ActionLoggingService {
 
             def stacktrace = sw.getBuffer().toString()
 
-            actionLoggingEvent?.exceptionMessage = exFiltered.message
-            actionLoggingEvent?.exceptionStackTrace = stacktrace
-            actionLoggingEvent?.status = "ERROR"
+            actionLoggingEvent.exceptionMessage = exFiltered.message
+            actionLoggingEvent.exceptionStackTrace = stacktrace
+            actionLoggingEvent.status = "ERROR"
             
             session.actionLoggingEvent = actionLoggingEvent 
         }
