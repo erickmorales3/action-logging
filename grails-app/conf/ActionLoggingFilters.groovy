@@ -81,8 +81,8 @@ class ActionLoggingFilters {
                     }
                     
                     def methods = controllerClass.getClazz().getMethods()
-                    methods.each { method ->
-                        if (method.getName() == actionNameValue) {
+                    for(method in methods) {
+                         if (method.getName() == actionNameValue) {
                             if (method.isAnnotationPresent(CustomActionName)) {
                                 def customActionNameAnnotation = method.getAnnotation(CustomActionName)
                                 def customActionNameObject = (CustomActionName) customActionNameAnnotation;
@@ -102,10 +102,10 @@ class ActionLoggingFilters {
                             if (method.isAnnotationPresent(PrintCustomLog)) {
                                 printCustomLogEnabled = method.getAnnotation(PrintCustomLog).value()
                             }
-                            return true
+                            break
                         }
                     }
-                    
+
                     def actionLoggingEvent = new ActionLoggingEvent(
                         controllerName: controllerNameValue,
                         actionName: actionNameValue,
