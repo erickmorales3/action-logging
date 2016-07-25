@@ -1,10 +1,10 @@
 # Action Logging - Grails Plugin
 
-A simple Grails Plugin to save a controller actions log in database, including controller name, action name, start-end time, total time (seconds), exceptions, custom messages and more.
+Store detailed log of controller actions in database including controller name, action name, start-end time, total time (seconds), exceptions, custom messages and more.
 
 ## Description
 
-It's specially useful to developers and system administrators, because saves custom messages, exceptions and execution time. This allows to know application weaknesses to correct it before user report. In addition, it allows to identify the current user to create  a user action history.
+It's specially useful to developers and system administrators, because it store custom messages, exceptions and execution time. This allows to know application weaknesses to correct it before user report. In addition, it allows to identify the current user to create  a user action history.
 
 For further information see [https://erickmorales3.github.io/action-logging/](https://erickmorales3.github.io/action-logging/)
 
@@ -23,7 +23,7 @@ mavenRepo "http://dl.bintray.com/erickmorales3/maven"
 Dependency:
 
 ```java
-compile ":action-logging:1.0.0"
+compile ":action-logging:1.1.0"
 ```
 
 ## How to use
@@ -99,21 +99,23 @@ class SampleController {
 }
 ```
 
-#### Printing custom log messages like println function
+#### Managing custom log messages with Logger implementation
 
-By default custom messages are only visible in Action Logging Event List screen or in action_loging database table, but is possible enable pirntln function adding the @PrintCustomLog annotation:
+By default custom messages are only visible in Action Logging Event List screen or in action_loging database table, but is possible manage log levels and incorporate it with your own log implementation like logback, log4j, etc. Adding the @PrintCustomLog annotation and importing LoggingLevel class:
 
 - To all controller actions
 
 ```java
+import org.mirzsoft.grails.actionlogging.Constants.LoggingLevel
+
 @ActionLogging
 @PrintCustomLog
 class SampleController {
     def actionLoggingService
     
     def index(){
-        actionLoggingService.log("A custom log message 1 - printed")
-        actionLoggingService.log("A custom log message 2 - printed")
+        actionLoggingService.log(LoggingLevel.INFO, "A custom log message 1 - printed")
+        actionLoggingService.log(LoggingLevel.INFO, "A custom log message 2 - printed")
     }
 }
 ```
@@ -121,14 +123,16 @@ class SampleController {
 - To all controller actions except to specific one
 
 ```java
+import org.mirzsoft.grails.actionlogging.Constants.LoggingLevel
+
 @ActionLogging
 @PrintCustomLog
 class SampleController {
     def actionLoggingService
     
     def index(){
-        actionLoggingService.log("A custom log message 1 - printed")
-        actionLoggingService.log("A custom log message 2 - printed")
+        actionLoggingService.log(LoggingLevel.INFO, "A custom log message 1 - printed")
+        actionLoggingService.log(LoggingLevel.INFO, "A custom log message 2 - printed")
     }
     
     @PrintCustomLog(false)
@@ -142,6 +146,8 @@ class SampleController {
 - To specific controller action
 
 ```java
+import org.mirzsoft.grails.actionlogging.Constants.LoggingLevel
+
 @ActionLogging
 class SampleController {
     def actionLoggingService
@@ -153,11 +159,16 @@ class SampleController {
     
     @PrintCustomLog
     def methodWithCustomPrint(){
-        actionLoggingService.log("A custom log message 3 - printed")
-        actionLoggingService.log("A custom log message 4 - printed")
+        actionLoggingService.log(LoggingLevel.INFO, "A custom log message 3 - printed")
+        actionLoggingService.log(LoggingLevel.INFO, "A custom log message 4 - printed")
     }
 }
 ```
+
+Available Logging levels: TRACE, DEBUG, INFO, WARN, ERROR.
+
+Note: If level is not specified, custom messages will printed using println function.
+
 
 #### Setting action type to all controller actions
 
@@ -275,4 +286,5 @@ License
 
 ### Thanks
 
-I hope it helps you
+* @burtbeckwith 
+* @rpalcolea
