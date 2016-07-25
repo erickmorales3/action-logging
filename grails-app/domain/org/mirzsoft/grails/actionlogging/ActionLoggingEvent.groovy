@@ -25,14 +25,10 @@
 
 package org.mirzsoft.grails.actionlogging
 
+import org.mirzsoft.grails.actionlogging.Constants.EventStatus
+
 class ActionLoggingEvent implements Serializable{
     private static final long serialVersionUID = 1
-
-    static enum Status {
-        RUNNING,
-        SUCCESS,
-        ERROR
-    }
 
     String controllerName
     String actionName
@@ -40,7 +36,7 @@ class ActionLoggingEvent implements Serializable{
     String customLog = ""
     String exceptionMessage
     String exceptionStackTrace
-    Status status = Status.RUNNING
+    EventStatus status = EventStatus.RUNNING
     String actionType
     Long startTime
     Long endTime

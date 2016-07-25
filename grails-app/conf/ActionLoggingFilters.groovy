@@ -25,15 +25,13 @@
 
 import static org.codehaus.groovy.grails.commons.ControllerArtefactHandler.TYPE as CONTROLLER
 import groovy.util.logging.Slf4j
+import org.codehaus.groovy.grails.commons.GrailsClass
+import grails.web.Action
 
 import org.mirzsoft.grails.actionlogging.ActionLoggingEvent
 import org.mirzsoft.grails.actionlogging.ActionLoggingService
-import org.mirzsoft.grails.actionlogging.ActionLoggingEvent.Status
-import org.mirzsoft.grails.actionlogging.annotation.ActionLogging
-import org.mirzsoft.grails.actionlogging.annotation.ActionType
-import org.mirzsoft.grails.actionlogging.annotation.CustomActionName
-import org.mirzsoft.grails.actionlogging.annotation.PrintCustomLog
-import org.mirzsoft.grails.actionlogging.annotation.SpringUserIdentification
+import org.mirzsoft.grails.actionlogging.annotation.*
+import org.mirzsoft.grails.actionlogging.Constants.EventStatus
 
 @Slf4j
 class ActionLoggingFilters {
@@ -44,24 +42,26 @@ class ActionLoggingFilters {
     def filters = {
         actionLogging(controller:'*', action:'*') {
             before = {
+                boolean actionLoggingEnabled = true
                 long start = System.currentTimeMillis()
 
                 if (!controllerName) {
                     return
                 }
 
-                Class controllerClazz = grailsApplication.getArtefactByLogicalPropertyName(CONTROLLER, controllerName).clazz
-                if (!controllerClazz.getAnnotation(ActionLogging)?.value()) {
-                    return
+                GrailsClass controllerClazz = grailsApplication.getArtefactByLogicalPropertyName(CONTROLLER, controllerName)
+                if (!controllerClazz.clazz.getAnnotation(ActionLogging)?.value()) {
+                    actionLoggingEnabled = false
                 }
-
-                String actionNameValue = actionName ?: "index"
-                boolean printCustomLogEnabled = controllerClazz.getAnnotation(PrintCustomLog)?.value()
-                String actionType = controllerClazz.getAnnotation(ActionType)?.value()
+                
+                List controllerMethods = controllerClazz.clazz.methods.findAll {it.getAnnotation(Action)}
+                
+                String actionNameValue = actionName ?: controllerClazz.getPropertyValue("defaultAction")?: controllerClazz.clazz.metaClass.respondsTo(controllerClazz, "index")? "index": controllerMethods.size == 1? controllerMethods.first().name: null
+                boolean printCustomLogEnabled = controllerClazz.clazz.getAnnotation(PrintCustomLog)?.value()
+                String actionType = controllerClazz.clazz.getAnnotation(ActionType)?.value()
                 String customActionName
-                boolean actionLoggingEnabled = true
-
-                for (method in controllerClazz.methods) {
+                
+                for (method in controllerMethods) {
                     if (method.name != actionNameValue) {
                         continue
                     }
@@ -76,18 +76,24 @@ class ActionLoggingFilters {
                         actionType = actionTypeAnnotation.value()
                     }
 
-                    if (!method.getAnnotation(ActionLogging)?.value()) {
-                        actionLoggingEnabled = false
+                    if (method.getAnnotation(ActionLogging)) {
+                        actionLoggingEnabled = method.getAnnotation(ActionLogging)?.value()? true: false
                     }
 
-                    printCustomLogEnabled = method.getAnnotation(PrintCustomLog)?.value()
+                    if (method.getAnnotation(PrintCustomLog)) {
+                        printCustomLogEnabled = method.getAnnotation(PrintCustomLog)?.value()? true: false
+                    }
 
                     break
                 }
+                
+                if (!actionLoggingEnabled) {
+                    return
+                }
 
                 Long userId
-                if (springSecurityService && controllerClazz.getAnnotation(SpringUserIdentification)?.value()) {
-                    userId = springSecurityService.principal?.id
+                if (springSecurityService && controllerClazz.clazz.getAnnotation(SpringUserIdentification)?.value()) {
+                    userId = springSecurityService?.currentUser?.id
                 }
 
                 ActionLoggingEvent event = new ActionLoggingEvent(
@@ -104,13 +110,10 @@ class ActionLoggingFilters {
                     userId: userId)
 
                 request.actionLoggingEvent = event
+                request.printCustomLogEnabled = printCustomLogEnabled
 
                 actionLoggingService.save event
 
-                // if (log.debugEnabled) {
-                //     log.debug "Before handle: start ${start} '$request.forwardURI', from $request.remoteHost ($request.remoteAddr) " +
-                //         " at ${new Date()}, Ajax: $request.xhr, controller: $controllerName, action: $actionName, params: ${new TreeMap(params)}"
-                // }
             }
 
             afterView = { Exception e ->
@@ -124,8 +127,8 @@ class ActionLoggingFilters {
                 if (e) {
                     actionLoggingService.setCustomException request.exception ?: e
                 }
-                else if (event.status != Status.ERROR) {
-                    event.status = Status.SUCCESS
+                else if (event.status != EventStatus.ERROR) {
+                    event.status = EventStatus.SUCCESS
                 }
 
                 actionLoggingService.save event

@@ -220,7 +220,7 @@
                 <td>${event.actionType}</td>
                 <td>${event.status}</td>
                 <td>${event.exceptionMessage}</td>
-                <td>${event.time / 1000 / 60}</td>
+                <td>${event.totalTime / 1000 / 60}</td>
                 <td>${event.date}</td>
                 <td>${event.forwardURI}</td>
                 <td>${event.remoteHost}</td>

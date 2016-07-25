@@ -32,11 +32,13 @@ import javax.servlet.http.HttpServletRequest
 
 import org.codehaus.groovy.grails.exceptions.DefaultStackTraceFilterer
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsWebRequest
-import org.mirzsoft.grails.actionlogging.ActionLoggingEvent.Status
 import org.springframework.context.MessageSource
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.validation.FieldError
 import org.springframework.web.context.request.RequestContextHolder
+
+import org.mirzsoft.grails.actionlogging.Constants.EventStatus
+import org.mirzsoft.grails.actionlogging.Constants.LoggingLevel
 
 @Slf4j
 class ActionLoggingService {
@@ -44,18 +46,39 @@ class ActionLoggingService {
     private final DefaultStackTraceFilterer stf = new DefaultStackTraceFilterer()
 
     MessageSource messageSource
-
-    void log(message) {
+    
+    void log(LoggingLevel level, String message) {
         ActionLoggingEvent event = getEvent()
-        if (!event) return
+        if (!event || !request.printCustomLogEnabled) return
 
-        if (request.printCustomLogEnabled) {
-            log.info message
+        switch (level){
+            case LoggingLevel.TRACE:
+                log.trace message
+                break;
+            case LoggingLevel.DEBUG:
+                log.debug message
+                break;
+            case LoggingLevel.INFO:
+                log.info message
+                break;
+            case LoggingLevel.WARN:
+                log.warn message
+                break;
+            case LoggingLevel.ERROR:
+                log.error message
+                break;
+            default:
+                println message
         }
 
-        event.customLog += message + '\n'
+        event.customLog += "${level? "${level}: ": ""}${message}\n"
     }
 
+    //Default/Previous version
+    void log(String message) {
+        log(null, message)
+    }
+    
     void setCustomActionName(String customActionName) {
         setEventProperty 'customActionName', customActionName
     }
@@ -77,7 +100,7 @@ class ActionLoggingService {
 
         event.exceptionMessage = exception.message
         event.exceptionStackTrace = sw.toString()
-        event.status = Status.ERROR
+        event.status = EventStatus.ERROR
     }
 
     @Transactional

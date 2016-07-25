@@ -238,7 +238,7 @@
         </tbody>
     </table>
     <div class="pagination">
-        <a href="${createLink(controller: "actionLoggingEvent", params: [offset: (params.offset? (actionLoggingEventInstanceList.size() >= 10 ? (params.int("offset") + 10) : params.int("offset")) : 10)])}">Old records</a>
+        <a href="${createLink(controller: "actionLoggingEvent", params: [offset: (params.offset? (events.size() >= 10 ? (params.int("offset") + 10) : params.int("offset")) : 10)])}">Old records</a>
     </div>
 </div>
 </body>
