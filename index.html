@@ -31,12 +31,17 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h2>
+        <h1>
+<a id="action-logging---grails-plugin" class="anchor" href="#action-logging---grails-plugin" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Action Logging - Grails Plugin</h1>
+
+<p>Store detailed log of controller actions in database including controller name, action name, start-end time, total time (seconds), exceptions, custom messages and more.</p>
+
+<h2>
 <a id="description" class="anchor" href="#description" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Description</h2>
 
-<p>A simple Grails Plugin to save a controller actions log in database, including controller name, action name, start-end time, total time (seconds), exceptions, custom messages and more.</p>
+<p>It's specially useful to developers and system administrators, because it store custom messages, exceptions and execution time. This allows to know application weaknesses to correct it before user report. In addition, it allows to identify the current user to create  a user action history.</p>
 
-<p>It's specially useful to developers and system administrators, because saves custom messages, exceptions and execution time. This allows to know application weaknesses to correct it before user report. In addition, it allows to identify the current user to create  a user action history.</p>
+<p>For further information see <a href="https://erickmorales3.github.io/action-logging/">https://erickmorales3.github.io/action-logging/</a></p>
 
 <h2>
 <a id="grails-version" class="anchor" href="#grails-version" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Grails Version</h2>
@@ -52,7 +57,7 @@
 
 <p>Dependency:</p>
 
-<div class="highlight highlight-source-java"><pre>compile <span class="pl-s"><span class="pl-pds">"</span>:action-logging:1.0.0<span class="pl-pds">"</span></span></pre></div>
+<div class="highlight highlight-source-java"><pre>compile <span class="pl-s"><span class="pl-pds">"</span>:action-logging:1.1.0<span class="pl-pds">"</span></span></pre></div>
 
 <h2>
 <a id="how-to-use" class="anchor" href="#how-to-use" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How to use</h2>
@@ -63,7 +68,7 @@
 
 <p>Add @ActionLogging annotation</p>
 
-<div class="highlight highlight-source-java"><pre>@<span class="pl-smi">ActionLogging</span>
+<div class="highlight highlight-source-java"><pre><span class="pl-k">@ActionLogging</span>
 <span class="pl-k">class</span> <span class="pl-en">SampleController</span> {
 
 }</pre></div>
@@ -78,7 +83,7 @@
 <h4>
 <a id="enable-action-logging-to-all-controller-actions-except-to-specific-one" class="anchor" href="#enable-action-logging-to-all-controller-actions-except-to-specific-one" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Enable Action Logging to all controller actions except to specific one</h4>
 
-<div class="highlight highlight-source-java"><pre>@<span class="pl-smi">ActionLogging</span>
+<div class="highlight highlight-source-java"><pre><span class="pl-k">@ActionLogging</span>
 <span class="pl-k">class</span> <span class="pl-en">SampleController</span> {
 
     def <span class="pl-en">index</span>(){
@@ -112,7 +117,7 @@
 
 <p>Inject actionLoggingService class:</p>
 
-<div class="highlight highlight-source-java"><pre>@<span class="pl-smi">ActionLogging</span>
+<div class="highlight highlight-source-java"><pre><span class="pl-k">@ActionLogging</span>
 <span class="pl-k">class</span> <span class="pl-en">SampleController</span> {
     def actionLoggingService
 
@@ -123,22 +128,24 @@
 }</pre></div>
 
 <h4>
-<a id="printing-custom-log-messages-like-println-function" class="anchor" href="#printing-custom-log-messages-like-println-function" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Printing custom log messages like println function</h4>
+<a id="managing-custom-log-messages-with-logger-implementation" class="anchor" href="#managing-custom-log-messages-with-logger-implementation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Managing custom log messages with Logger implementation</h4>
 
-<p>By default custom messages are only visible in Action Logging Event List screen or in action_loging database table, but is possible enable pirntln function adding the @PrintCustomLog annotation:</p>
+<p>By default custom messages are only visible in Action Logging Event List screen or in action_loging database table, but is possible manage log levels and incorporate it with your own log implementation like logback, log4j, etc. Adding the @PrintCustomLog annotation and importing LoggingLevel class:</p>
 
 <ul>
 <li>To all controller actions</li>
 </ul>
 
-<div class="highlight highlight-source-java"><pre>@<span class="pl-smi">ActionLogging</span>
-@<span class="pl-smi">PrintCustomLog</span>
+<div class="highlight highlight-source-java"><pre><span class="pl-k">import</span> <span class="pl-smi">org.mirzsoft.grails.actionlogging.Constants.LoggingLevel</span>
+
+<span class="pl-k">@ActionLogging</span>
+<span class="pl-k">@PrintCustomLog</span>
 <span class="pl-k">class</span> <span class="pl-en">SampleController</span> {
     def actionLoggingService
 
     def index(){
-        actionLoggingService<span class="pl-k">.</span>log(<span class="pl-s"><span class="pl-pds">"</span>A custom log message 1 - printed<span class="pl-pds">"</span></span>)
-        actionLoggingService<span class="pl-k">.</span>log(<span class="pl-s"><span class="pl-pds">"</span>A custom log message 2 - printed<span class="pl-pds">"</span></span>)
+        actionLoggingService<span class="pl-k">.</span>log(<span class="pl-smi">LoggingLevel</span><span class="pl-c1"><span class="pl-k">.</span>INFO</span>, <span class="pl-s"><span class="pl-pds">"</span>A custom log message 1 - printed<span class="pl-pds">"</span></span>)
+        actionLoggingService<span class="pl-k">.</span>log(<span class="pl-smi">LoggingLevel</span><span class="pl-c1"><span class="pl-k">.</span>INFO</span>, <span class="pl-s"><span class="pl-pds">"</span>A custom log message 2 - printed<span class="pl-pds">"</span></span>)
     }
 }</pre></div>
 
@@ -146,17 +153,19 @@
 <li>To all controller actions except to specific one</li>
 </ul>
 
-<div class="highlight highlight-source-java"><pre>@<span class="pl-smi">ActionLogging</span>
-@<span class="pl-smi">PrintCustomLog</span>
+<div class="highlight highlight-source-java"><pre><span class="pl-k">import</span> <span class="pl-smi">org.mirzsoft.grails.actionlogging.Constants.LoggingLevel</span>
+
+<span class="pl-k">@ActionLogging</span>
+<span class="pl-k">@PrintCustomLog</span>
 <span class="pl-k">class</span> <span class="pl-en">SampleController</span> {
     def actionLoggingService
 
     def index(){
-        actionLoggingService<span class="pl-k">.</span>log(<span class="pl-s"><span class="pl-pds">"</span>A custom log message 1 - printed<span class="pl-pds">"</span></span>)
-        actionLoggingService<span class="pl-k">.</span>log(<span class="pl-s"><span class="pl-pds">"</span>A custom log message 2 - printed<span class="pl-pds">"</span></span>)
+        actionLoggingService<span class="pl-k">.</span>log(<span class="pl-smi">LoggingLevel</span><span class="pl-c1"><span class="pl-k">.</span>INFO</span>, <span class="pl-s"><span class="pl-pds">"</span>A custom log message 1 - printed<span class="pl-pds">"</span></span>)
+        actionLoggingService<span class="pl-k">.</span>log(<span class="pl-smi">LoggingLevel</span><span class="pl-c1"><span class="pl-k">.</span>INFO</span>, <span class="pl-s"><span class="pl-pds">"</span>A custom log message 2 - printed<span class="pl-pds">"</span></span>)
     }
 
-    @PrintCustomLog(<span class="pl-c1">false</span>)
+    <span class="pl-k">@PrintCustomLog</span>(<span class="pl-c1">false</span>)
     def methodWithoutCustomPrint(){
         actionLoggingService<span class="pl-k">.</span>log(<span class="pl-s"><span class="pl-pds">"</span>A custom log message 3<span class="pl-pds">"</span></span>)
         actionLoggingService<span class="pl-k">.</span>log(<span class="pl-s"><span class="pl-pds">"</span>A custom log message 4<span class="pl-pds">"</span></span>)
@@ -167,7 +176,9 @@
 <li>To specific controller action</li>
 </ul>
 
-<div class="highlight highlight-source-java"><pre>@<span class="pl-smi">ActionLogging</span>
+<div class="highlight highlight-source-java"><pre><span class="pl-k">import</span> <span class="pl-smi">org.mirzsoft.grails.actionlogging.Constants.LoggingLevel</span>
+
+<span class="pl-k">@ActionLogging</span>
 <span class="pl-k">class</span> <span class="pl-en">SampleController</span> {
     def actionLoggingService
 
@@ -176,18 +187,22 @@
         actionLoggingService<span class="pl-k">.</span>log(<span class="pl-s"><span class="pl-pds">"</span>A custom log message 2<span class="pl-pds">"</span></span>)
     }
 
-    @<span class="pl-smi">PrintCustomLog</span>
+    <span class="pl-k">@PrintCustomLog</span>
     def methodWithCustomPrint(){
-        actionLoggingService<span class="pl-k">.</span>log(<span class="pl-s"><span class="pl-pds">"</span>A custom log message 3 - printed<span class="pl-pds">"</span></span>)
-        actionLoggingService<span class="pl-k">.</span>log(<span class="pl-s"><span class="pl-pds">"</span>A custom log message 4 - printed<span class="pl-pds">"</span></span>)
+        actionLoggingService<span class="pl-k">.</span>log(<span class="pl-smi">LoggingLevel</span><span class="pl-c1"><span class="pl-k">.</span>INFO</span>, <span class="pl-s"><span class="pl-pds">"</span>A custom log message 3 - printed<span class="pl-pds">"</span></span>)
+        actionLoggingService<span class="pl-k">.</span>log(<span class="pl-smi">LoggingLevel</span><span class="pl-c1"><span class="pl-k">.</span>INFO</span>, <span class="pl-s"><span class="pl-pds">"</span>A custom log message 4 - printed<span class="pl-pds">"</span></span>)
     }
 }</pre></div>
+
+<p>Available Logging levels: TRACE, DEBUG, INFO, WARN, ERROR.</p>
+
+<p>Note: If level is not specified, custom messages will printed using println function.</p>
 
 <h4>
 <a id="setting-action-type-to-all-controller-actions" class="anchor" href="#setting-action-type-to-all-controller-actions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Setting action type to all controller actions</h4>
 
-<div class="highlight highlight-source-java"><pre>@<span class="pl-smi">ActionLogging</span>
-@ActionType(<span class="pl-s"><span class="pl-pds">"</span>Administrator/Supervisor Actions<span class="pl-pds">"</span></span>)
+<div class="highlight highlight-source-java"><pre><span class="pl-k">@ActionLogging</span>
+<span class="pl-k">@ActionType</span>(<span class="pl-s"><span class="pl-pds">"</span>Administrator/Supervisor Actions<span class="pl-pds">"</span></span>)
 <span class="pl-k">class</span> <span class="pl-en">SampleController</span> {
 
 }</pre></div>
@@ -195,8 +210,8 @@
 <h4>
 <a id="identifying-current-user-with-spring-security-core-plugin" class="anchor" href="#identifying-current-user-with-spring-security-core-plugin" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Identifying current user with Spring Security Core Plugin</h4>
 
-<div class="highlight highlight-source-java"><pre>@<span class="pl-smi">ActionLogging</span>
-@<span class="pl-smi">SpringUserIdentification</span>
+<div class="highlight highlight-source-java"><pre><span class="pl-k">@ActionLogging</span>
+<span class="pl-k">@SpringUserIdentification</span>
 <span class="pl-k">class</span> <span class="pl-en">SampleController</span> {
 
 }</pre></div>
@@ -204,7 +219,7 @@
 <h4>
 <a id="identifying-current-user-without-spring-security-core-plugin" class="anchor" href="#identifying-current-user-without-spring-security-core-plugin" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Identifying current user without Spring Security Core Plugin</h4>
 
-<div class="highlight highlight-source-java"><pre>@<span class="pl-smi">ActionLogging</span>
+<div class="highlight highlight-source-java"><pre><span class="pl-k">@ActionLogging</span>
 <span class="pl-k">class</span> <span class="pl-en">SampleController</span> {
     def actionLoggingService
 
@@ -220,7 +235,7 @@
 <li>Using @CustomActionName annotation</li>
 </ul>
 
-<div class="highlight highlight-source-java"><pre>@<span class="pl-smi">ActionLogging</span>
+<div class="highlight highlight-source-java"><pre><span class="pl-k">@ActionLogging</span>
 <span class="pl-k">class</span> <span class="pl-en">SampleController</span> {
     <span class="pl-k">@CustomActionName</span>(<span class="pl-s"><span class="pl-pds">"</span>Custom action name<span class="pl-pds">"</span></span>)
     def <span class="pl-en">index</span>(){
@@ -232,7 +247,7 @@
 <li>Using actionLoggingService class</li>
 </ul>
 
-<div class="highlight highlight-source-java"><pre>@<span class="pl-smi">ActionLogging</span>
+<div class="highlight highlight-source-java"><pre><span class="pl-k">@ActionLogging</span>
 <span class="pl-k">class</span> <span class="pl-en">SampleController</span> {
     def actionLoggingService
 
@@ -248,7 +263,7 @@
 <li>Using @ActionType annotation</li>
 </ul>
 
-<div class="highlight highlight-source-java"><pre>@<span class="pl-smi">ActionLogging</span>
+<div class="highlight highlight-source-java"><pre><span class="pl-k">@ActionLogging</span>
 <span class="pl-k">class</span> <span class="pl-en">SampleController</span> {
     <span class="pl-k">@ActionType</span>(<span class="pl-s"><span class="pl-pds">"</span>Administrator Action<span class="pl-pds">"</span></span>)
     def <span class="pl-en">index</span>(){
@@ -260,7 +275,7 @@
 <li>Using actionLoggingService class</li>
 </ul>
 
-<div class="highlight highlight-source-java"><pre>@<span class="pl-smi">ActionLogging</span>
+<div class="highlight highlight-source-java"><pre><span class="pl-k">@ActionLogging</span>
 <span class="pl-k">class</span> <span class="pl-en">SampleController</span> {
     def actionLoggingService
 
@@ -276,7 +291,7 @@
 
 <p>The handled exception in try catch block are omited, but is posible setting an exception object manually, as follows:</p>
 
-<div class="highlight highlight-source-java"><pre>@<span class="pl-smi">ActionLogging</span>
+<div class="highlight highlight-source-java"><pre><span class="pl-k">@ActionLogging</span>
 <span class="pl-k">class</span> <span class="pl-en">SampleController</span> {
     def actionLoggingService
 
@@ -297,7 +312,11 @@
 <h3>
 <a id="thanks" class="anchor" href="#thanks" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Thanks</h3>
 
-<p>I hope it helps you</p>
+<ul>
+<li>
+<a href="https://github.com/burtbeckwith" class="user-mention">@burtbeckwith</a> </li>
+<li><a href="https://github.com/rpalcolea" class="user-mention">@rpalcolea</a></li>
+</ul>
       </section>
     </div>
 
