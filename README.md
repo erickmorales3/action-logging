@@ -14,16 +14,10 @@ For further information see [https://erickmorales3.github.io/action-logging/](ht
 
 ## Install
 
-Repository:
-
-```java
-mavenRepo "http://dl.bintray.com/erickmorales3/maven"
-```
-
 Dependency:
 
 ```java
-compile ":action-logging:1.1.0"
+compile ":action-logging:1.1.1"
 ```
 
 ## How to use
